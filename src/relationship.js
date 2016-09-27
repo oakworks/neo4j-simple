@@ -183,9 +183,9 @@ Relationship.prototype._save = function (options) {
   var resetRelationship = function (ids, type, direction) {
     return function resetRelationshipOfId(data) {
       var _relationship = getRelationship(type, direction);
-      var query = ['START a=node:node_auto_index(' + self.idName + '={ aId }),',
-                   '      b=node:node_auto_index(' + self.idName + '={ bId })',
-                   'CREATE UNIQUE a' + _relationship + 'b',
+      var query = ['MATCH (a {id: {aId} }),',
+                   '      (b {id: {bId} })',
+                   'CREATE (a)' + _relationship + '(b)',
                    'SET r = { data }',
                    'RETURN r'].join('\n');
 
@@ -217,9 +217,9 @@ Relationship.prototype._save = function (options) {
       };
 
       var _relationship = getRelationship(type, direction);
-      var _query = ['START a=node:node_auto_index(' + self.idName + '={ aId }),',
-                    '      b=node:node_auto_index(' + self.idName + '={ bId })',
-                    'CREATE UNIQUE a' + _relationship + 'b'],
+      var _query = ['MATCH (a {id: {aId} }),',
+                   '      (b {id: {bId} })',
+                    'CREATE (a)' + _relationship + '(b)'],
           _setters = _getSetters(data),
           _return = ["RETURN r"],
           query = _query.concat(_setters, _return).join('\n');
